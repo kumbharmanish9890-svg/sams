@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Similar Players')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <a href="/scout" class="btn btn-sm btn-secondary mb-3">← Back</a>
+    <h2>Similar to <span th:text="${target.player.name}"></span></h2>
+    <p class="text-secondary">Budget: up to Rs. <span th:text="${budget}"></span> 
+
+    <div th:if="${#lists.isEmpty(results)}" class="alert alert-warning">
+		No player found within this budget. Try a higher budget.
+    </div>
+
+    <table class="table table-hover align-middle" th:unless="${#lists.isEmpty(results)}">
+        <thead><tr><th>Player</th><th>Position</th><th>Value (₹.Cr)</th><th>Similarity</th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${results}">
+            <td th:text="${r.name}"></td>
+            <td th:text="${r.position}"></td>
+            <td th:text="${r.marketValue}"></td>
+            <td style="min-width:200px">
+                <div class="progress">
+                    <div class="progress-bar bg-success" th:style="'width:' + ${r.similarity} + '%'"
+                         th:text="${r.similarity} + '%'"></div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

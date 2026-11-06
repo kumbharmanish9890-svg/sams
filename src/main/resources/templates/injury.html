@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Injury Risk')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Injury Risk (ACWR)</h2>
+        <a href="/injury/report" class="btn btn-danger">
+            <i class="bi bi-file-earmark-pdf"></i> Download PDF
+        </a>
+    </div>
+    <p>
+        <span class="badge text-bg-success">0.8-1.3 Safe</span>
+        <span class="badge text-bg-warning">1.3-1.5 Warning</span>
+        <span class="badge text-bg-danger">Above 1.5 High Risk</span>
+    </p>    <table class="table table-hover align-middle">
+        <thead><tr><th>Player</th><th>Acute (7d)</th><th>Chronic (28d)</th><th>ACWR</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${risks}">
+            <td th:text="${r.name}"></td>
+            <td th:text="${r.acute}"></td>
+            <td th:text="${r.chronic}"></td>
+            <td><b th:text="${r.acwr}"></b></td>
+            <td><span class="badge" th:classappend="'text-bg-' + ${r.badge}" th:text="${r.status}"></span></td>
+            <td><a th:href="@{/injury/{id}(id=${r.playerId})}" class="btn btn-sm btn-primary">Chart</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Teams')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <h2 class="mb-3">Teams</h2>
+
+    <div th:if="${param.inuse}" class="alert alert-warning">
+        This team has players. Move or delete those players first.
+    </div>
+
+    <form th:action="@{/teams/save}" th:object="${team}" method="post" class="row g-2 mb-4">
+        <div class="col-md-3"><input class="form-control" th:field="*{name}" placeholder="Team name" required></div>
+        <div class="col-md-3"><input class="form-control" th:field="*{sport}" placeholder="Sport"></div>
+        <div class="col-md-3"><input class="form-control" th:field="*{city}" placeholder="City"></div>
+        <div class="col-md-3"><button class="btn btn-success w-100">Add Team</button></div>
+    </form>
+    <table class="table table-hover">
+        <thead><tr><th>ID</th><th>Name</th><th>Sport</th><th>City</th><th>Action</th></tr></thead>
+        <tbody>
+        <tr th:each="t : ${teams}">
+            <td th:text="${t.id}"></td><td th:text="${t.name}"></td>
+            <td th:text="${t.sport}"></td><td th:text="${t.city}"></td>
+            <td><a th:href="@{/teams/delete/{id}(id=${t.id})}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Delete this team?')">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

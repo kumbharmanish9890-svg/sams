@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Training Load')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Training Load</h2>
+        <a href="/loads/sample" class="btn btn-outline-warning">Generate Sample Data</a>
+    </div>
+    <form th:action="@{/loads/save}" th:object="${load}" method="post" class="row g-2 mb-4">
+        <div class="col-md-3">
+            <select class="form-select" th:field="*{player}" required>
+                <option th:each="p : ${players}" th:value="${p.id}" th:text="${p.name}"></option>
+            </select></div>
+        <div class="col-md-2"><input type="date" class="form-control" th:field="*{date}" required></div>
+        <div class="col-md-2"><input type="number" min="1" max="10" class="form-control" th:field="*{rpe}" placeholder="RPE (1-10)" required></div>
+        <div class="col-md-3"><input type="number" class="form-control" th:field="*{durationMin}" placeholder="Duration (min)" required></div>
+        <div class="col-md-2"><button class="btn btn-success w-100">Add</button></div>
+    </form>
+    <table class="table table-hover">
+        <thead><tr><th>Date</th><th>Player</th><th>RPE</th><th>Min</th><th>Load</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="l : ${loads}">
+            <td th:text="${l.date}"></td>
+            <td th:text="${l.player != null} ? ${l.player.name} : '-'"></td>
+            <td th:text="${l.rpe}"></td>
+            <td th:text="${l.durationMin}"></td>
+            <td th:text="${l.load}"></td>
+            <td><a th:href="@{/loads/delete/{id}(id=${l.id})}" class="btn btn-sm btn-danger">X</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

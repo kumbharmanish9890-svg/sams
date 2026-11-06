@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Scouting')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Scouting</h2>
+        <a href="/scout/sample" class="btn btn-outline-warning">Generate Sample Ratings</a>
+    </div>
+    
+        <div th:if="${param.missing}" class="alert alert-warning">
+			Ratings are missing for the selected player. Add ratings first or click Generate Sample Ratings. 
+	   </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card p-3 h-100">
+                <h5>Compare Two Players</h5>
+                <form action="/scout/compare" method="get" class="row g-2">
+                    <div class="col-5">
+                        <select class="form-select" name="a">
+                            <option th:each="p : ${players}" th:value="${p.id}" th:text="${p.name}"></option>
+                        </select></div>
+                    <div class="col-5">
+                        <select class="form-select" name="b">
+                            <option th:each="p : ${players}" th:value="${p.id}" th:text="${p.name}"></option>
+                        </select></div>
+                    <div class="col-2"><button class="btn btn-primary w-100">Go</button></div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card p-3 h-100">
+                <h5>Find Similar Player (within Budget)</h5>
+                <form action="/scout/similar" method="get" class="row g-2">
+                    <div class="col-5">
+                        <select class="form-select" name="playerId">
+                            <option th:each="p : ${players}" th:value="${p.id}" th:text="${p.name}"></option>
+                        </select></div>
+                    <div class="col-5">
+                        <input type="number" step="0.1" class="form-control" name="budget"
+                              placeholder="Budget (Rs. crore)" required></div>
+                    <div class="col-2"><button class="btn btn-success w-100">Find</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 mb-4">
+        <h5>Update Ratings</h5>
+        <form th:action="@{/scout/save}" th:object="${profile}" method="post" class="row g-2">
+            <div class="col-md-3">
+                <select class="form-select" name="player" required>
+                    <option th:each="p : ${players}" th:value="${p.id}" th:text="${p.name}"></option>
+                </select></div>
+            <div class="col-md-1"><input type="number" min="1" max="100" class="form-control" th:field="*{pace}" placeholder="PAC" required></div>
+            <div class="col-md-1"><input type="number" min="1" max="100" class="form-control" th:field="*{shooting}" placeholder="SHO" required></div>
+            <div class="col-md-1"><input type="number" min="1" max="100" class="form-control" th:field="*{passing}" placeholder="PAS" required></div>
+            <div class="col-md-1"><input type="number" min="1" max="100" class="form-control" th:field="*{dribbling}" placeholder="DRI" required></div>
+            <div class="col-md-1"><input type="number" min="1" max="100" class="form-control" th:field="*{defending}" placeholder="DEF" required></div>
+            <div class="col-md-1"><input type="number" min="1" max="100" class="form-control" th:field="*{physical}" placeholder="PHY" required></div>
+            <div class="col-md-2"><input type="number" step="0.1" class="form-control" th:field="*{marketValue}" placeholder="Value ₹Cr" required></div>
+            <div class="col-md-1"><button class="btn btn-success w-100">Save</button></div>
+        </form>
+    </div>
+
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Player</th><th>PAC</th><th>SHO</th><th>PAS</th><th>DRI</th><th>DEF</th><th>PHY</th><th>Value (₹Cr)</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="s : ${profiles}">
+            <td th:text="${s.player != null} ? ${s.player.name} : '-'"></td>
+            <td th:text="${s.pace}"></td>
+            <td th:text="${s.shooting}"></td>
+            <td th:text="${s.passing}"></td>
+            <td th:text="${s.dribbling}"></td>
+            <td th:text="${s.defending}"></td>
+            <td th:text="${s.physical}"></td>
+            <td th:text="${s.marketValue}"></td>
+            <td><a th:href="@{/scout/delete/{id}(id=${s.id})}" class="btn btn-sm btn-danger">X</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

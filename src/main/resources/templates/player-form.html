@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Player Form')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <h2 class="mb-3">Player Details</h2>
+    <form th:action="@{/players/save(_csrf=${_csrf.token})}" th:object="${player}" method="post"
+          enctype="multipart/form-data" class="row g-3" style="max-width:700px">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{photo}">     
+        
+        <input type="hidden" th:field="*{id}">
+
+        <div class="col-md-6">
+            <label class="form-label">Name</label>
+            <input class="form-control" th:field="*{name}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Age</label>
+            <input type="number" class="form-control" th:field="*{age}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Position</label>
+            <input class="form-control" th:field="*{position}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Team</label>
+            <select class="form-select" name="team">
+                <option th:each="t : ${teams}"
+                        th:value="${t.id}"
+                        th:text="${t.name}"
+                        th:selected="${player.team != null and player.team.id == t.id}"></option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Height (cm)</label>
+            <input type="number" step="0.1" class="form-control" th:field="*{heightCm}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Weight (kg)</label>
+            <input type="number" step="0.1" class="form-control" th:field="*{weightKg}">
+        </div>
+        
+        <div class="col-12">
+            <label class="form-label">Player Photo (JPG / PNG / WEBP, max 5 MB)</label>
+            <div class="d-flex align-items-center gap-3">
+                <img id="photoPreview" class="avatar avatar-lg"
+                     th:src="${player.photo != null and !#strings.isEmpty(player.photo)} ? @{/uploads/players/{f}(f=${player.photo})} : 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='">
+                <input type="file" name="photoFile" accept="image/png,image/jpeg,image/webp"
+                       class="form-control" onchange="showPreview(this)">
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-success">Save</button>
+            <a href="/players" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+<script>
+		function showPreview(input) {
+    	if (input.files && input.files[0]) {
+        document.getElementById('photoPreview').src = URL.createObjectURL(input.files[0]);
+    }
+}
+</script>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

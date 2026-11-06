@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Dashboard')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <h2 class="mb-4">Dashboard</h2>
+    <div class="row g-4">
+        <div class="col-md-4"><div class="stat-card bg-grad1">
+            <i class="bi bi-people-fill fs-1"></i><h1 th:text="${playerCount}">0</h1><p>Total Players</p></div></div>
+        <div class="col-md-4"><div class="stat-card bg-grad2">
+            <i class="bi bi-shield-fill fs-1"></i><h1 th:text="${teamCount}">0</h1><p>Total Teams</p></div></div>
+        <div class="col-md-4"><div class="stat-card bg-grad3">
+            <i class="bi bi-heart-pulse-fill fs-1"></i><h1 th:text="${alertCount}">0</h1><p>High Risk Alerts</p></div></div>
+    </div>
+
+    <h4 class="mt-5">Player Risk Status</h4>
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Player</th><th>ACWR</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${risks}">
+            <td th:text="${r.name}"></td>
+            <td th:text="${r.acwr}"></td>
+            <td><span class="badge" th:classappend="'text-bg-' + ${r.badge}" th:text="${r.status}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

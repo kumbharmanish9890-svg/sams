@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Players')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Players</h2>
+            <div th:if="${param.badimage}" class="alert alert-warning">Only JPG, PNG or WEBP photos are allowed. </div>
+        <a href="/players/new" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Player</a>
+    </div>
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Photo</th><th>ID</th><th>Name</th><th>Age</th><th>Position</th><th>Team</th><th>Action</th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${players}">
+         <td>
+                <img th:if="${p.photo != null and !#strings.isEmpty(p.photo)}"
+                     th:src="@{/uploads/players/{f}(f=${p.photo})}" class="avatar">
+                <i th:unless="${p.photo != null and !#strings.isEmpty(p.photo)}"
+                   class="bi bi-person-circle fs-2 text-secondary"></i>
+            </td>
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.name}"></td>
+            <td th:text="${p.age}"></td>
+            <td th:text="${p.position}"></td>
+            <td th:text="${p.team != null} ? ${p.team.name} : '-'"></td>
+            <td>
+                <a th:href="@{/players/edit/{id}(id=${p.id})}" class="btn btn-sm btn-primary">Edit</a>
+                <a th:href="@{/players/delete/{id}(id=${p.id})}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('This will also delete the player training and scouting data. Continue?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

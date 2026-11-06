@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Load Chart')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <a href="/injury" class="btn btn-sm btn-secondary mb-3">← Back</a>
+    <h2 th:text="${risk.name}">Player</h2>
+    <h4>ACWR: <span th:text="${risk.acwr}"></span>
+        <span class="badge" th:classappend="'text-bg-' + ${risk.badge}" th:text="${risk.status}"></span></h4>
+    <canvas id="loadChart" height="110" class="mt-4"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    const labels = /*[[${labels}]]*/ [];
+    const values = /*[[${values}]]*/ [];
+    const css = getComputedStyle(document.documentElement);
+    Chart.defaults.color = css.getPropertyValue('--muted').trim();
+    Chart.defaults.borderColor = css.getPropertyValue('--glass-border').trim();
+    new Chart(document.getElementById('loadChart'), {
+        type: 'line',
+        data: { labels: labels,
+                datasets: [{ label: 'Daily Load', data: values, borderColor: '#38ef7d',
+                             backgroundColor: 'rgba(56,239,125,0.15)', fill: true, tension: 0.3 }] }
+    });
+</script>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

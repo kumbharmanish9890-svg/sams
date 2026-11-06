@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Compare')}"></head>
+<body>
+<div th:replace="~{layout :: sidebar}"></div>
+<div class="content">
+    <a href="/scout" class="btn btn-sm btn-secondary mb-3">← Back</a>
+    <h2><span th:text="${nameA}"></span> <small class="text-secondary">vs</small> <span th:text="${nameB}"></span></h2>
+
+    <div id="msg" class="alert alert-danger d-none">Chart.js load झालं नाही. Internet तपासा.</div>
+
+    <div style="position:relative; width:100%; max-width:650px; height:500px;" class="mt-4">
+        <canvas id="radar"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    const nameA = /*[[${nameA}]]*/ 'A';
+    const nameB = /*[[${nameB}]]*/ 'B';
+    const valuesA = /*[[${valuesA}]]*/ [];
+    const valuesB = /*[[${valuesB}]]*/ [];
+
+    if (typeof Chart === 'undefined') {
+        document.getElementById('msg').classList.remove('d-none');
+    } else {
+        new Chart(document.getElementById('radar'), {
+            type: 'radar',
+            data: {
+                labels: ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physical'],
+                datasets: [
+                    { label: nameA, data: valuesA, borderColor: '#38ef7d', backgroundColor: 'rgba(56,239,125,0.25)' },
+                    { label: nameB, data: valuesB, borderColor: '#ff512f', backgroundColor: 'rgba(255,81,47,0.25)' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { r: { min: 0, max: 100, ticks: { stepSize: 20 } } }
+            }
+        });
+    }
+</script>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>
